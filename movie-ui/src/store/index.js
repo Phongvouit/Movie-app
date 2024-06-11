@@ -53,8 +53,21 @@ const getRawData = async (api, genres, paging = false) => {
     return moviesArray
 }
 
+export const fetchDataByGenre = createAsyncThunk(
+    "movie/genre",
+    async({genre, type}, thunkAPI) => {
+        const {
+            movie: {genres}
+        } = thunkAPI.getState()
+        return getRawData(
+            `${TMBD_BASE_URL}/discover/${type}?api_key=${API_KEY}&with_genres=${genre}`,
+            genres
+        )
+    }
+)
+
 export const fetchMovies = createAsyncThunk(
-    "/movie/trending",
+    "movie/trending",
     async ({ type }, thunkAPI) => {
         const {
             movie: {genres},
@@ -78,6 +91,9 @@ const MovieSlice = createSlice({
             state.genresLoaded = true;
         });
         builder.addCase(fetchMovies.fulfilled, (state, action) => {
+            state.movies = action.payload
+        });
+        builder.addCase(fetchDataByGenre.fulfilled, (state, action) => {
             state.movies = action.payload
         })
     }

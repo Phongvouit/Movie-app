@@ -32,8 +32,6 @@ export default function Netflix() {
     }
   },[genresLoaded])
 
-  console.log(movies)
-
   return (
     <Container>
       <Navbar isScrolled={isScrolled}/>

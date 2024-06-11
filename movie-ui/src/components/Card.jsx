@@ -7,7 +7,7 @@ import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
 import { BsCheck } from "react-icons/bs";
 
-export default function Card({ movieData, isLiked = false }) {
+export default React.memo(function Card({ movieData, isLiked = false }) {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <Container
@@ -53,8 +53,7 @@ export default function Card({ movieData, isLiked = false }) {
       )}
     </Container>
   );
-}
-
+});
 const Container = styled.div`
   max-width: 230px;
   width: 230px;

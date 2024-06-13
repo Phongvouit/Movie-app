@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit"
 
 import axios from "axios"
-import { API_KEY, TMBD_BASE_URL } from './../utils/constants';
+import { API_KEY, REACT_APP_API, TMBD_BASE_URL } from './../utils/constants';
 
 const initialState = {
     movies: [],
@@ -81,6 +81,15 @@ export const fetchMovies = createAsyncThunk(
 
 )
 
+export const getUserLikedMovies = createAsyncThunk(
+    "movie/getLiked",
+    async(email) => {
+        const {
+            data: {movies},
+        } = await axios.get(`${REACT_APP_API}/api/user/liked/${email}`)
+        return movies
+    }
+)
 
 const MovieSlice = createSlice({
     name: "Movie",
@@ -94,6 +103,9 @@ const MovieSlice = createSlice({
             state.movies = action.payload
         });
         builder.addCase(fetchDataByGenre.fulfilled, (state, action) => {
+            state.movies = action.payload
+        });
+        builder.addCase(getUserLikedMovies.fulfilled, (state, action) => {
             state.movies = action.payload
         })
     }

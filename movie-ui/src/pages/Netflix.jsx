@@ -32,6 +32,7 @@ export default function Netflix() {
     }
   },[genresLoaded])
 
+
   return (
     <Container>
       <Navbar isScrolled={isScrolled}/>

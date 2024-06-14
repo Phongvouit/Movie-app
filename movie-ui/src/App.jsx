@@ -1,5 +1,6 @@
 import React from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {Toaster} from "react-hot-toast"
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Netflix from './pages/Netflix'
@@ -18,6 +19,7 @@ export default function App() {
       <Route exact path='/mylist' element={<MyList/>}/>
       <Route exact path='/' element={<Netflix/>}/>
     </Routes>
+    <Toaster/>
     </BrowserRouter>
   )
 }

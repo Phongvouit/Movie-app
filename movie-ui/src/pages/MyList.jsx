@@ -11,7 +11,7 @@ import { getUserLikedMovies } from "../store";
 export default function MyList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const movies = useSelector((state) => state.movie.movies);
+  const movies = useSelector((state) => state.movie.listFavorites);
   const [isScrolled, setIsScrolled] = useState(false);
   const [email, setEmail] = useState(undefined);
 
@@ -27,6 +27,7 @@ export default function MyList() {
     if (email) {
       dispatch(getUserLikedMovies(email));
     }
+    
   }, [email]);
 
   window.onscroll = () => {
@@ -40,7 +41,7 @@ export default function MyList() {
       <div className="content flex column">
         <h1>My List</h1>
         <div className="grid flex">
-          {movies.map((movie, index) => {
+          {movies?.map((movie, index) => {
             return (
               <Card
                 movieData={movie}
@@ -60,8 +61,9 @@ const Container = styled.div`
   .content {
     margin: 2.3rem;
     margin-top: 8rem;
+    gap: 2rem;
       h1 {
-      margin-left: 3rem;
+      margin-left: 2rem;
     }
     .grid {
       flex-wrap: wrap;

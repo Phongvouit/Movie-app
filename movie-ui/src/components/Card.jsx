@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import video from "../assets/ATLAS - Official Teaser - Netflix.mp4";
 import { IoPlayCircleSharp } from "react-icons/io5";
@@ -11,9 +11,17 @@ import { firebaseAuth } from './../utils/firebase-config';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { REACT_APP_API } from "../utils/constants";
+import { useDispatch } from 'react-redux';
+import { removeMovieFromLiked, getUserLikedMovies } from "../store";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import favoriteUtils from "../utils/favorite-utils";
+
 
 export default React.memo(function Card({ movieData, isLiked = false }) {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const listFavorites = useSelector((state) => state.movie.listFavorites);
   const [isHovered, setIsHovered] = useState(false);
   const [email, setEmail] = useState(undefined)
 
@@ -29,10 +37,26 @@ export default React.memo(function Card({ movieData, isLiked = false }) {
         email,
         data: movieData
       })
+      toast.success("Add favorite movie successfully")
+      console.log(movieData.id)
     } catch (error) {
       console.log(error)
     }
   }
+
+  const removeFromList = () => {
+    dispatch(
+      removeMovieFromLiked({email,  movieId: movieData.id})
+    )
+    toast.success("Remove favorite movie successfully")
+  }
+
+  useEffect(() => {
+    if (email) {
+      dispatch(getUserLikedMovies(email));
+    }
+  }, [email]);
+  
 
   return (
     <Container
@@ -60,8 +84,11 @@ export default React.memo(function Card({ movieData, isLiked = false }) {
                 <IoPlayCircleSharp />
                 <RiThumbUpFill />
                 <RiThumbDownFill />
-                {isLiked ? (
-                  <BsCheck />
+                {favoriteUtils({listFavorites, movieId: movieData.id}) ? (
+                  <BsCheck 
+                  title="Remove from List"
+                  onClick={removeFromList}
+                  />
                   ) : (
                   <AiOutlinePlus title="Add movie to my list" onClick={addToList}/>
                   )}

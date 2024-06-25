@@ -8,12 +8,14 @@ import { useNavigate } from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux"
 import { fetchMovies, getGenres } from "../store";
 import Slider from "../components/Slider";
+import Footer from "../components/Footer";
 
 export default function Netflix() {
   const navigate = useNavigate()
   const [isScrolled, setIsScrolled] = useState(false)
   const genresLoaded = useSelector((state) => state.movie.genres)
   const movies = useSelector((state) => state.movie.movies)
+  console.log(movies)
 
   const dispatch = useDispatch()
 
@@ -68,6 +70,7 @@ export default function Netflix() {
         </div>
       </div>
       <Slider movies={movies}/>
+      <Footer/>
     </Container>
   );
 }
@@ -122,7 +125,7 @@ const Container = styled.div`
             background-color: rgba(109, 109, 110, 0.7);
             color: white;
             svg {
-              font-size: 1.8rem;F
+              font-size: 1.8rem;
         }
       }
     }

@@ -11,7 +11,8 @@ const initialState = {
   movies: [],
   genresLoaded: false,
   genres: [],
-  listFavorites: []
+  listFavorites: [],
+  searchMovies: [],
 };
 
 export const getGenres = createAsyncThunk("movie/genres", async () => {
@@ -41,7 +42,7 @@ const createArrayFromRawData = (array, moviesArray, genres) => {
   });
 };
 
-const getRawData = async (api, genres, paging = false) => {
+const getRawData = async (api, genres, search, paging = false) => {
   const moviesArray = [];
   for (let i = 1; moviesArray.length < 60 && i < 10; i++) {
     const {
@@ -79,6 +80,20 @@ export const fetchMovies = createAsyncThunk(
   }
 );
 
+export const searchMovie = createAsyncThunk("movie/search", async ({search}, thunkAPI) => {
+  const moviesArray = []
+  const {
+    movie: {genres}
+  } = thunkAPI.getState()
+  const {
+    data: { results },
+  } = await axios.get(
+    `${TMBD_BASE_URL}/search/movie?api_key=${API_KEY}&query=${search}`
+  );
+  createArrayFromRawData(results, moviesArray, genres)
+  return moviesArray;
+});
+
 export const getUserLikedMovies = createAsyncThunk(
   "movie/getLiked",
   async (email) => {
@@ -98,7 +113,7 @@ export const removeMovieFromLiked = createAsyncThunk(
       email,
       movieId,
     });
-    return movies
+    return movies;
   }
 );
 
@@ -116,12 +131,15 @@ const MovieSlice = createSlice({
     builder.addCase(fetchDataByGenre.fulfilled, (state, action) => {
       state.movies = action.payload;
     });
+    builder.addCase(searchMovie.fulfilled, (state, action) => {
+      state.searchMovies = action.payload;
+    });
     builder.addCase(getUserLikedMovies.fulfilled, (state, action) => {
       state.listFavorites = action.payload;
     });
     builder.addCase(removeMovieFromLiked.fulfilled, (state, action) => {
-        state.listFavorites = action.payload;
-    })
+      state.listFavorites = action.payload;
+    });
   },
 });
 

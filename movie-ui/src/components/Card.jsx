@@ -16,9 +16,10 @@ import { removeMovieFromLiked, getUserLikedMovies } from "../store";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import favoriteUtils from "../utils/favorite-utils";
+import { routesGen } from "../routes/route";
+import { API_KEY } from "../utils/constants";
 
-
-export default React.memo(function Card({ movieData, isLiked = false }) {
+export default React.memo(function Card({ movieData, mediaType = "movies"}) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const listFavorites = useSelector((state) => state.movie.listFavorites);
@@ -56,12 +57,20 @@ export default React.memo(function Card({ movieData, isLiked = false }) {
       dispatch(getUserLikedMovies(email));
     }
   }, [email]);
+
+  const handleDetailMovie = () => {
+    navigate(routesGen.mediaDetail(mediaType, movieData.id))
+  }
+
+
+ 
   
 
   return (
     <Container
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleDetailMovie}
     >
       <img
         src={`https://image.tmdb.org/t/p/w500${movieData.image}`}

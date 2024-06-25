@@ -47,7 +47,6 @@ export default function MyList() {
                 movieData={movie}
                 index={index}
                 key={movie.id}
-                isLiked={true}
               />
             );
           })}
